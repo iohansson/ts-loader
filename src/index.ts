@@ -284,7 +284,7 @@ function getEmit(
   );
 
   const allTsFiles = [...instance.files.keys()].filter(defFilePath =>
-    defFilePath.match(constants.dtsDtsxRegex)
+    defFilePath.match(constants.tsTsxRegex)
   );
 
   // Make this file dependent on *all* definition files in the program
