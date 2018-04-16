@@ -283,9 +283,18 @@ function getEmit(
     defFilePath.match(constants.dtsDtsxRegex)
   );
 
+  const allTsFiles = [...instance.files.keys()].filter(defFilePath =>
+    defFilePath.match(constants.dtsDtsxRegex)
+  );
+
   // Make this file dependent on *all* definition files in the program
   const addDependency = loader.addDependency.bind(loader);
   allDefinitionFiles.forEach(addDependency);
+
+  // Additionally make this file dependent on all TS files from tsconfig
+  if (allTsFiles) {
+    allTsFiles.forEach(addDependency);
+  }
 
   // Additionally make this file dependent on all imported files
   const fileDependencies = instance.dependencyGraph[filePath];
@@ -298,6 +307,7 @@ function getEmit(
   }
 
   loader._module.buildMeta.tsLoaderDefinitionFileVersions = allDefinitionFiles
+    .concat(allTsFiles)
     .concat(additionalDependencies)
     .map(
       defFilePath =>
